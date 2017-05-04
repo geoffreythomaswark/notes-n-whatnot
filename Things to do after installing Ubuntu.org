@@ -1,0 +1,84 @@
+#+TITLE: Things to do after installing Ubuntu
+#+DATE: [2017-04-29 Sat]
+#+AUTHOR: Geoffrey T. Wark
+#+EMAIL: deek9n@protonmail.ch
+
+* Introduction
+
+What follows are changes that I make to a fresh Ubuntu install.  Many changes may work on other Linux distros as well.  *NO SUPPORT WILL BE PROVIDED!*
+
+This was last updated for 16.04.2 LTS which can be downloaded [[http://releases.ubuntu.com/16.04.2/][here]].
+
+* Keyboard
+** Turn Caps Lock into a 2nd Ctrl key
+
+This is super helpful (especially for Emacs).  You won't be able to turn on/off Caps Lock after applying this so be careful.  I would recommend adding this as a 'Startup Application'.
+
+#+BEGIN_SRC sh
+  setxkbmap -layout "$(setxkbmap -print | awk -F + '/xkb_symbols/ {print $2}')" -option ctrl:nocaps
+#+END_SRC
+
+This setting gets reset after suspend.  Prevent that from happening.
+
+#+BEGIN_SRC sh
+  sudo mv /usr/lib/unity-settings-daemon-1.0/libkeyboard.so /usr/lib/unity-settings-daemon-1.0/libkeyboard.so.disabled
+
+  restart unity-settings-daemon
+#+END_SRC
+
+* Mouse settings
+
+** Disable acceleration
+
+Add this to =/usr/share/X11/xorg.conf.d/50-mouse-acceleration.conf=
+
+#+BEGIN_SRC 
+Section "InputClass"
+	Identifier "My Mouse"
+	MatchIsPointer "yes"
+	Option "AccelerationProfile" "-1"
+EndSection
+#+END_SRC
+
+If you use =libinput= then use this instead.
+
+#+BEGIN_SRC 
+Section "InputClass"
+	Identifier "My Mouse"
+	Driver "libinput"
+	MatchIsPointer "yes"
+	Option "AccelProfile" "flat"
+EndSection
+#+END_SRC
+
+** Adjust sensitivity
+
+Feel free to adjust this as you want.  You could actually put this in =xorg.conf.d= but... there's a long-standing bug that prevents you from using floats lower than 1.  I would recommend adding this as a 'Startup Application'.
+
+*NOTE:* This will be different if you are using =libinput=.
+
+#+BEGIN_SRC sh
+  xinput --set-prop 'Microsoft Microsoft 5-Button Mouse with IntelliEye(TM)' 'Device Accel Constant Deceleration' 0.6
+#+END_SRC
+
+** Change polling rate
+
+| Hz | 1000 | 500 | 250 | 125 |
+|----+------+-----+-----+-----|
+| ms |    1 |   2 |   4 |   8 |
+
+Create =/etc/modprobe.d/usbhid.conf= and add the following where X is your desired polling rate (I like to use 2):
+
+#+BEGIN_SRC 
+options usbhid mousepoll=X
+#+END_SRC
+
+Then run:
+
+#+BEGIN_SRC sh
+  sudo update-initramfs -u
+#+END_SRC
+
+* Misc.
+
+TODO
