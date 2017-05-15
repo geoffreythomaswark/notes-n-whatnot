@@ -9,6 +9,8 @@ What follows are changes that I make to a fresh Ubuntu install.  Many changes ma
 
 This was last updated for 16.04.2 LTS which can be downloaded [[http://releases.ubuntu.com/16.04.2/][here]].
 
+These settings will later be compiled into a script... when I get around to it.
+
 * Keyboard
 ** Turn Caps Lock into a 2nd Ctrl key
 
@@ -79,6 +81,26 @@ Then run:
   sudo update-initramfs -u
 #+END_SRC
 
-* Misc.
+* Video Drivers
 
-TODO
+I use Nvidia's proprietary graphics drivers.  To install that add the PPA:
+
+#+BEGIN_SRC sh
+  sudo add-apt-repository ppa:graphics-drivers/ppa
+  sudo apt update
+#+END_SRC
+
+Then go to 'Additional Drivers' and select the most recent/apply changes.
+
+* Packages
+
+Here are a list of additional packages that I install:
+
+#+BEGIN_SRC sh
+TODO... there's a lot of them
+#+END_SRC
+
+* Miscellaneous
+** Intel CPU proprietary drivers
+
+I like to install this just in case.  To do so, just go to 'Additonal Drivers' and select processor microcode firmware/apply changes.
